@@ -14,8 +14,10 @@ net.createServer(socket => socket.pipe(process.stdout)).listen(3000)
 
 //node -e "process.stdin.pipe(require('net').connect(1338))"*/
 
-import { pipeline, Readable, Writable } from 'stream'
+import { pipeline, Readable, Writable, Transform } from 'stream'
+import { json } from 'stream/consumers'
 import { promisify } from 'util'
+import { createWriteStream } from 'fs'
 
 const pipelineAsync = promisify(pipeline)
 
@@ -44,16 +46,40 @@ const pipelineAsync = promisify(pipeline)
     console.log('processo 01 acabou')
 }
 {
-    const readableStream = Readable({
-        reac () {
-            for(let i=0; i < 1e5; i++){
-                const person = {id: Date.now}
+    const writableMapToCSV = Transform({
+        transform(chunk, enconding, cb){
+            const data = JSON.parse(chunk)
+            const result = `${data.id}, ${data.name.toUpperCase()}` 
+            cb(null, result)
+        }
+    })
+
+    const setHeader = Transform({
+        transform(chunk, enconding, cb){
+            this.counter = this.counter ?? 0    
+            if(this.counter){
+                return cb(null, chunk)
             }
+            this.counter += 1
+            cb(null, "id,name\n".concat(chunk))
+        }
+    })
+
+    const readableStream = Readable({
+        read () {
+            for(let i=0; i < 1e5; i++){
+                const person = {id: Date.now() + i, name: `Digo-${i}` }
+                const data= JSON.stringify(person)
+                this.push(data)
+            }
+            this.push(null)
         }
     })
     await pipelineAsync(
         readableStream,
-        writebleStream
+        writableMapToCSV,
+        setHeader,
+        createWriteStream('my.quests')
         //process.stdout
     )
 }
