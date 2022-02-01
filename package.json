@@ -1,5 +1,12 @@
 {
   "dependencies": {
-    "csvtojson": "^2.0.10"
+    "csvtojson": "^2.0.10",
+    "D": "^1.0.0",
+    "nodemon": "^2.0.15"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "nodemon index.js",
+    "start": "nodemon exemplo.mjs"
   }
 }
