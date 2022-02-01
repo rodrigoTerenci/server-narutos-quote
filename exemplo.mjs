@@ -1,27 +1,60 @@
 import http from 'http'
 import { readFile, readFileSync, writeFileSync, createReadStream, createWriteStream } from 'fs'
 import  csvtojson  from 'csvtojson'
-http.createServer((req, res) =>{
+import express from 'express'
+
+import cors from 'cors'
+const app = express()
+
+const port = 3000
+app.use(cors({
+    origin: '*'
+  }))
+  app.use(express.json())
+
+app.get('/', (req, res) => {
+    let data = csvtojson()
+                .fromFile('FinalQuotes.csv')
+                .then((json) => {
+                    return json
+                        //writeFileSync("output.json",JSON.stringify(json),"utf-8",(err) => {
+                        //if(err) console.log(err)
+                })
+        
+        var r = parseInt(Math.random() * 508)
+        //let speaker, quote
+
+        //data.then((data)=>data[r])
+       let resp= data.then((data)=> {
+           return {speaker: data[r][0], quote: data[r][1]}
+        })
+        
+    resp.then((ev)=> res.json(ev))
+})
+
+app.listen(port, () => {
+  console.log(`Example app listening on port ${port}`)
+})
+
+/*http.createServer((req, res) =>{
     let data = csvtojson()
         .fromFile('FinalQuotes.csv')
         .then((json) => {
             return json
-            /*writeFileSync("output.json",JSON.stringify(json),"utf-8",(err) => {
-                if(err) console.log(err)
-            })*/
+            //writeFileSync("output.json",JSON.stringify(json),"utf-8",(err) => {
+              //  if(err) console.log(err)
+            })//
         })
-        var r = () => Math.random() * 508
-       data.then((data)=> console.log(data[r]))
-    /* const data = readFileSync('FinalQuotes.csv', 'utf8' ,'r', (err, data) => {
-        if (err) {
-          console.error(err)
-          return
-        }
-        return JSON.stringify(data)
-      })
-      //var r = Math.random() * data.length
-      console.log(JSON.parse(data))*/
-    //res.end('Hello')
+        var r = parseInt(Math.random() * 508)
+
+       let resp= data.then((data)=> {
+           return {speaker: data[r][0], quote: data[r][1]}
+        })
+        
+
+    // const data = readFileSync('FinalQuotes.csv', 'utf8' ,'r', (err, data) => {
+     
+     res.write(resp)
     //createReadStream('FinalQuotes.csv')
         //.pipe(res)
 }).listen(3000, () => console.log('running at 3000'))
