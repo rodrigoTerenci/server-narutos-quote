@@ -25,11 +25,11 @@ app.get('/', (req, res) => {
         //let speaker, quote
 
         //data.then((data)=>data[r])
-       let resp= data.then((data)=> {
-           return {speaker: data[r][0], quote: data[r][1]}
+       data.then((data)=> {
+           res.send({speaker: data[r][0], quote: data[r][1]})
         })
         
-    resp.then((ev)=> res.json(ev))
+  //  resp.then((ev)=> res.json(ev))
 })
 
 app.listen(port, () => {
