@@ -1,0 +1,19 @@
+{
+  "type": "module",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "csvtojson": "^2.0.10",
+    "express": "^4.18.2",
+    "g": "^2.0.1",
+    "nodemon": "^2.0.15"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "nodemon index.js",
+    "start": "node hello.js",
+    "vercel-build": "node ./build.js"
+  },
+  "devDependencies": {
+    "@vercel/node": "^3.0.6"
+  }
+}
