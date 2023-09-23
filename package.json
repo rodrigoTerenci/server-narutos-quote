@@ -11,6 +11,9 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "nodemon index.js",
     "start": "node index.js",
-    "build": "node index.js"
+    "vercel-build": "node ./build.js"
+  },
+  "devDependencies": {
+    "@vercel/node": "^3.0.6"
   }
 }
